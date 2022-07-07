@@ -1,0 +1,122 @@
+:root {
+    --optionHeight: 35px;
+    --checkBoxSize: 20px;
+    overflow: hidden;
+}
+
+html, body {
+    background: #1e2124;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    /*position: relative;*/
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: var(--loadingSize);
+    height: var(--loadingSize);
+}
+
+.voteBox {
+    min-width: 180px;
+    max-width: 800px;
+    min-height: 100px;
+    border: gray solid 1px;
+    position: relative;
+    top: 30px;
+    padding: 15px;
+    margin: 0 30px;
+}
+
+.voteLeftBar {
+    width: 65px;
+    height: 100%;
+    float: left;
+}
+
+.voteMainDiv {
+    width: 100%;
+    padding-left: 65px;
+    box-sizing: border-box;
+}
+
+.accountName {
+    color: white;
+    font-size: 18px;
+    margin: 0;
+}
+
+.accountPic {
+    width: 50px;
+    border-radius: 25px;
+}
+
+.voteTitle {
+    color: lightgray;
+    font-size: 30px;
+    margin: 0;
+    font-weight: unset;
+}
+
+.totalVoteCount {
+    color: lightgray;
+}
+
+.voteOptionsSection {
+    width: 100%;
+}
+
+.voteOption {
+    height: var(--optionHeight);
+    width: 100%;
+    padding-left: var(--optionHeight);
+    margin-top: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.optionCheckBox {
+    width: var(--checkBoxSize);
+    margin-left: calc(0px - var(--optionHeight) / 2 - var(--checkBoxSize) / 2);
+    margin-top: calc(var(--optionHeight) / 2 - var(--checkBoxSize) / 2);
+    position: absolute;
+}
+
+.checkBox {
+    fill: white;
+}
+
+.optionPercent {
+    background: #7289da;
+    border-radius: 4px;
+    height: 100%;
+    white-space: nowrap;
+    position: relative;
+}
+
+.optionPercentText {
+    color: whitesmoke;
+    font-size: 18px;
+    line-height: var(--optionHeight);
+    right: 5px;
+    display: inline-block;
+}
+
+.optionText {
+    color: whitesmoke;
+    font-size: 20px;
+    line-height: var(--optionHeight);
+    margin: 0 10px 0 5px;
+    float: left;
+}
