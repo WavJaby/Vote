@@ -78,6 +78,8 @@ html, body {
     width: 100%;
     padding-left: var(--optionHeight);
     margin-top: 5px;
+    border-radius: 4px;
+    border: #323538 solid 1px;
     box-sizing: border-box;
     cursor: pointer;
     user-select: none;
