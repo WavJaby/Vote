@@ -9,8 +9,8 @@ const votePath = window.location.pathname;
 
 (async function () {
     const apiUrl = 'https://script.google.com/macros/s/AKfycbzmgU05idEitNRoty5enjPQZ2Ju8zmSXmczt0zj7091xOEPUnj3K4WNgaPRC2iAntVGoQ/exec';
-    const uncheckImage = await getSvg('http://localhost:63342/uncheck.svg');
-    const checkedImage = await getSvg('http://localhost:63342/checked.svg')
+    const uncheckImage = await getSvg('uncheck.svg');
+    const checkedImage = await getSvg('checked.svg')
     const voteData = await getVotes();
 
     // Vote box
