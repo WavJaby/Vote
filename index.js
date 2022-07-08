@@ -8,7 +8,7 @@ const locate = navigator.language || navigator.userLanguage;
 const votePath = window.location.pathname;
 
 (async function () {
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzmgU05idEitNRoty5enjPQZ2Ju8zmSXmczt0zj7091xOEPUnj3K4WNgaPRC2iAntVGoQ/exec';
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxtOk7_EpLTj0JRaCmuSxGHrxY-A809CBLyEIOc4FTCFpKjVVgdzfIRvuVybFaz107Iiw/exec';
     const voteData = await getVotes();
     const uncheckImage = await getSvg('uncheck.svg');
     const checkedImage = await getSvg('checked.svg');
@@ -156,6 +156,10 @@ const votePath = window.location.pathname;
 
     async function getVotes() {
         return (await fetch(apiUrl)).json();
+    }
+
+    async function getUpdate() {
+        return (await fetch(apiUrl + '?t=1')).json();
     }
 
     const myHeaders = new Headers();
