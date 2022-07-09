@@ -4,4 +4,6 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-discord.xml
+/inspectionProfiles/
+
+/discord.xml

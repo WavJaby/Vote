@@ -23,7 +23,7 @@
     width: 100%;
     position: absolute;
     top: 0;
-    bottom: 50vh;
+    bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
@@ -33,6 +33,17 @@
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
     animation: dash var(--extrusionTime) ease-in-out infinite, color calc(var(--extrusionTime) * 4) ease-in-out infinite;
+}
+
+.loaderCircle {
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: var(--loadingSize);
+    height: var(--loadingSize);
 }
 
 @keyframes rotate {
