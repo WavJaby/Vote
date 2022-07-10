@@ -1,29 +1,38 @@
-(async function () {
+(function () {
     // Text Input
-    let chatMessageHistory;
+    const chatMessageHistory = div('chatMessageHistory');
+    const messageInput = input(null, 'Message', ['maxlength', 50]);
+    const messageSendButton = div('sendButton', svg('src/sendButton.svg'));
     const chatBox =
         div('chatBox',
             div('chatTextInput',
-                input(null, 'Message'),
+                messageInput,
                 div('underline', div()),
-                svg('src/sendButton.svg', 'sendButton')
+                messageSendButton
             ),
-            (chatMessageHistory = div('chatMessageHistory'))
+            chatMessageHistory
         );
     document.body.appendChild(chatBox);
 
-    addMessage('src/DefaultProfilePicture.jpg', 'WavJaby', '0w0');
-    addMessage('src/DefaultProfilePicture.jpg', 'WavJaby', 'hello');
+    function sendMessage(e) {
+        if (messageInput.value.length === 0 || e.key && e.key !== 'Enter') return;
+        addMessage('src/DefaultProfilePicture.jpg', 'WavJaby', messageInput.value);
+        messageInput.value = '';
+    }
+
+    messageInput.addEventListener('keydown', sendMessage);
+    messageSendButton.addEventListener('click', sendMessage);
 
     function addMessage(profilePictureUrl, profileName, message) {
-        chatMessageHistory.appendChild(
-            div(null,
+        chatMessageHistory.insertBefore(
+            div('messageHistory',
                 div('profilePicture', img(profilePictureUrl)),
                 div('nameAndMessage',
                     p(profileName, 'profileName'),
                     p(message, 'message')
                 )
-            )
-        )
+            ),
+            chatMessageHistory.firstChild
+        );
     }
 })

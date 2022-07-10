@@ -1,5 +1,5 @@
 (async function () {
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbxtOk7_EpLTj0JRaCmuSxGHrxY-A809CBLyEIOc4FTCFpKjVVgdzfIRvuVybFaz107Iiw/exec';
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxxXpZAQ772e4gHs2sHpRvJxD9k-57s4ZTK8M2Rtn2eYtWmlfyI8Up6y1ZXehQcMg4TvA/exec';
     const postHeader = new Headers();
     postHeader.append("Content-Type", "text/plain; charset=utf-8");
 
@@ -34,7 +34,7 @@
     totalVoteCount.textContent = total + votedText;
     document.body.appendChild(voteBox);
     updateAll();
-    setInterval(getUpdate, 5000);
+    setInterval(getUpdate, 1200);
     window.addEventListener('resize', updateAll);
     document.getElementById('loader').remove();
 

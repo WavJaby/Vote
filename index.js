@@ -9,16 +9,23 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matc
 else
     console.log('dark mode');
 
-const locate = navigator.language || navigator.userLanguage;
+const locate = navigator.language;
 const votePath = window.location.pathname;
 const voteQuery = window.location.search;
-
-window.getText = getText;
 
 const voteSection = require('voteSection.js');
 const chatSection = require('chatSection.js');
 voteSection();
 // chatSection();
+
+window.locate = locate;
+window.getText = getText;
+window.div = div;
+window.input = input;
+window.p = p;
+window.h1 = h1;
+window.img = img;
+window.svg = svg;
 
 /**
  * @param url file url
@@ -57,55 +64,84 @@ function addOption(element, options) {
             element[options[i][0]] = options[i][1];
 }
 
-window.div = div;
-window.input = input;
-window.p = p;
-window.h1 = h1;
-window.img = img;
-window.svg = svg;
-function div(className, ...options) {
+/**
+ * @param classN Class Name
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function div(classN = undefined, ...options) {
     const element = document.createElement('div');
-    if (className) element.className = className;
+    if (classN) element.className = classN;
     if (options) addOption(element, options);
     return element;
 }
 
-function input(className, placeholder, ...options) {
+/**
+ * @param classN Class Name
+ * @param placeholder
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function input(classN = undefined, placeholder = undefined, ...options) {
     const element = document.createElement('input');
-    if (className) element.className = className;
+    if (classN) element.className = classN;
     if (placeholder) element.placeholder = placeholder;
     if (options) addOption(element, options);
     return element;
 }
 
-function p(text, className, ...options) {
+/**
+ * @param text Class Name
+ * @param classN Class Name
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function p(text = undefined, classN = undefined, ...options) {
     const element = document.createElement('p');
-    if (className) element.className = className;
+    if (classN) element.className = classN;
     if (text) element.textContent = text;
     if (options) addOption(element, options);
     return element;
 }
 
-function h1(text, className, ...options) {
+/**
+ * @param text Class Name
+ * @param classN Class Name
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function h1(text = undefined, classN = undefined, ...options) {
     const element = document.createElement('h1');
-    if (className) element.className = className;
+    if (classN) element.className = classN;
     if (text) element.textContent = text;
     if (options) addOption(element, options);
     return element;
 }
 
-function img(src, className, ...options) {
+/**
+ * @param url
+ * @param classN Class Name
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function img(url = undefined, classN = undefined, ...options) {
     const element = document.createElement('img');
-    if (className) element.className = className;
-    if (src) element.src = src;
+    if (classN) element.className = classN;
+    if (url) element.src = url;
     if (options) addOption(element, options);
     return element;
 }
 
-function svg(url, className, ...options) {
+/**
+ * @param url
+ * @param classN Class Name
+ * @param options Option for element
+ * @return HTMLElement
+ * */
+function svg(url = undefined, classN = undefined, ...options) {
     const parser = new DOMParser();
     const element = parser.parseFromString(getText(url), 'image/svg+xml').documentElement;
-    if (className) element.classList.add(className)
+    if (classN) element.classList.add(classN)
     if (options) addOption(element, options);
     return element;
 }

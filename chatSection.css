@@ -7,34 +7,52 @@
 }
 
 /*Message History*/
-.chatMessageHistory > div {
+.chatMessageHistory {
     position: relative;
-    margin-top: 10px;
+    overflow: hidden;
 }
 
-.chatMessageHistory > div > .profilePicture {
+.chatMessageHistory > .messageHistory {
+    margin-top: 10px;
+    animation: slideIn ease-in 0.1s;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+.chatMessageHistory > .messageHistory > .profilePicture {
     height: 100%;
     width: 50px;
     float: left;
 }
 
-.chatMessageHistory > div > .profilePicture > img {
+.chatMessageHistory > .messageHistory > .profilePicture > img {
     width: 40px;
     border-radius: 50%;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
-.chatMessageHistory > div > .nameAndMessage {
+.chatMessageHistory > .messageHistory > .nameAndMessage {
     width: 100%;
     box-sizing: border-box;
 }
 
-.chatMessageHistory > div > .nameAndMessage > .profileName {
+.chatMessageHistory > .messageHistory > .nameAndMessage > .profileName {
     color: white;
     font-size: 18px;
     margin: 0;
 }
 
-.chatMessageHistory > div > .nameAndMessage > .message {
+.chatMessageHistory > .messageHistory > .nameAndMessage > .message {
     color: lightgray;
     font-size: 18px;
     margin: 0;
@@ -83,13 +101,14 @@
     top: 0;
     right: 0;
     cursor: pointer;
-}
-
-.chatTextInput > .sendButton {
-    fill: white;
     outline: none;
 }
 
-.chatTextInput > .sendButton:hover {
+.chatTextInput > .sendButton > svg {
+    height: 100%;
+    fill: white;
+}
+
+.chatTextInput > .sendButton:hover > svg {
     fill: dodgerblue;
 }
