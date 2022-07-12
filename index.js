@@ -4,28 +4,94 @@ console.clear();
 // }, 100);
 
 // theme
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
-    console.log('light mode');
-else
-    console.log('dark mode');
+const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+console.log(darkMode ? 'dark mode' : 'light mode');
 
+// settings
 const locate = navigator.language;
-const votePath = window.location.pathname;
-const voteQuery = window.location.search;
 
-const voteSection = require('voteSection.js');
-const chatSection = require('chatSection.js');
-voteSection();
-// chatSection();
+// const
+const apiUrls = [
+    'https://script.google.com/macros/s/AKfycbxxXpZAQ772e4gHs2sHpRvJxD9k-57s4ZTK8M2Rtn2eYtWmlfyI8Up6y1ZXehQcMg4TvA/exec',
+    'https://script.google.com/macros/s/AKfycbzpkVVMQk94um-psm1zVLPqPcPuraeg8B0GWHePIi-fTMac_vZEZP9qafKdFOLv5yKbaQ/exec',
+    'https://script.google.com/macros/s/AKfycbwm2TkE5VegB3uXuaHs3mtGjhomKZBF_F4DxtIK5A-V1QxXT9aFLGeJcGP-lCnOiOYzLw/exec',
+    'https://script.google.com/macros/s/AKfycbxYLj1dunoeyRtIU0gO_UGUfQiLhkWz-0LQQO-PKsqw4yaQtFV90ByNftHRhf8Lw-KT/exec',
+    'https://script.google.com/macros/s/AKfycbzjJNWBgvC-QVtfwZxEEYlcoryEoabANKAgvIrOAtLPXh_kB518Rucj0mEQYosBSC2fbQ/exec'
+];
+const postHeader = new Headers();
+postHeader.append("Content-Type", "text/plain; charset=utf-8");
+const clientID = '37794333274-pp209ka9k4mcgngmcv6klehpdl5jfsqi.apps.googleusercontent.com';
+const apiKey = 'AIzaSyAGwVlLaNF7VnM26HnK8r7GQvh3_BCweOE';
+// const updateInterval = 1000 / apiUrls.length + 100;
+const updateInterval = 500;
 
-window.locate = locate;
-window.getText = getText;
-window.div = div;
-window.input = input;
-window.p = p;
-window.h1 = h1;
-window.img = img;
-window.svg = svg;
+let apiUrlIndex = 0;
+
+// app
+(async function () {
+    const data = {};
+    const userData = loginGoogle(data);
+    let initData = getDataJson('?i=t');
+    const voteSection = require('voteSection.js');
+    const chatSection = require('chatSection.js');
+    const getUpdate = require('getUpdate.js')();
+    data.initData = await initData;
+    voteSection(data.initData, getUpdate);
+    document.getElementById('loader').remove();
+    chatSection(data, getUpdate);
+    getUpdate.start();
+    data.userData = await userData;
+})();
+
+function loginGoogle(data) {
+    return new Promise((resolve, reject) => {
+        google.accounts.id.initialize({
+            client_id: clientID,
+            auto_select: true,
+            callback: function (loginData) {
+                resolve(b64uToJson(loginData.credential));
+                if (data.loginButton) {
+                    data.loginButton.remove();
+                    delete data.loginButton;
+                }
+            }
+        });
+        google.accounts.id.prompt(function (notification) {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                // continue with another identity provider.
+                resolve(null);
+            }
+        });
+    });
+}
+
+function nextAPIUrl() {
+    const api = apiUrls[apiUrlIndex];
+    if (apiUrls.length > 1 && ++apiUrlIndex === apiUrls.length)
+        apiUrlIndex = 0;
+    return api;
+}
+
+async function postData(body) {
+    const requestOptions = {
+        method: 'POST',
+        headers: postHeader,
+        body: JSON.stringify(body),
+        redirect: 'follow',
+    };
+    return (await fetch(nextAPIUrl(), requestOptions)).text();
+}
+
+async function getDataJson(query) {
+    if (query)
+        return (await fetch(nextAPIUrl() + query)).json();
+    else
+        return (await fetch(nextAPIUrl())).json();
+}
+
+async function getDataText(query) {
+    return (await fetch(nextAPIUrl() + query)).text();
+}
 
 /**
  * @param url file url

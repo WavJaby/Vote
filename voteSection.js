@@ -1,9 +1,4 @@
-(async function () {
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbxxXpZAQ772e4gHs2sHpRvJxD9k-57s4ZTK8M2Rtn2eYtWmlfyI8Up6y1ZXehQcMg4TvA/exec';
-    const postHeader = new Headers();
-    postHeader.append("Content-Type", "text/plain; charset=utf-8");
-
-    const voteData = await getVotes();
+(function (voteData, updater) {
     const uncheckImage = svg('src/uncheck.svg');
     const checkedImage = svg('src/checked.svg');
 
@@ -12,10 +7,10 @@
     const optionsSection = div('voteOptionsSection');
     const totalVoteCount = div('totalVoteCount');
     const voteBox = div('voteBox',
-        div('voteLeftBar', img(voteData.proPic, 'accountPic')),
+        div('voteLeftBar', img(voteData.pic, 'accountPic')),
         div('voteMainDiv',
-            p(voteData.proName, 'accountName'),
-            h1(voteData.title, 'voteTitle'),
+            p(voteData.nam, 'accountName'),
+            h1(voteData.tit, 'voteTitle'),
             totalVoteCount,
             optionsSection
         )
@@ -26,7 +21,7 @@
     const cookieIndex = document.cookie.indexOf('selOptI');
     const selectOptionIndex = cookieIndex ? -1 : parseInt(document.cookie.substring(cookieIndex + 8));
 
-    let selectCheckBox, selectOption;
+    let selectCheckBox, selectOption, lastUpdateSelectIndex = -1;
     let total = voteData.ops.reduce((a, b) => a instanceof Array ? a[1] + b[1] : a + b[1]);
     let lastUpdateVotes = voteData.ops.reduce((a, b) => a instanceof Array ? a[1] + ',' + b[1] : a + ',' + b[1]);
     for (const opt of voteData.ops)
@@ -34,9 +29,8 @@
     totalVoteCount.textContent = total + votedText;
     document.body.appendChild(voteBox);
     updateAll();
-    setInterval(getUpdate, 1200);
     window.addEventListener('resize', updateAll);
-    document.getElementById('loader').remove();
+    updater.addListener(updateVotes);
 
     // functions
     function createOption(optionTitle, count) {
@@ -59,6 +53,7 @@
         if (option.index === selectOptionIndex) {
             selectCheckBox = optionCheckBox;
             selectOption = option;
+            lastUpdateSelectIndex = option.index;
         }
 
         option.addEventListener('click', function () {
@@ -68,15 +63,9 @@
                 total--;
             }
             if (selectOption === option) {
-                postVote({deSel: selectOption.index});
                 selectCheckBox = selectOption = null;
                 document.cookie = 'selOptI=-1';
             } else {
-                if (selectOption)
-                    postVote({sel: option.index, deSel: selectOption.index});
-                else
-                    postVote({sel: option.index});
-
                 selectCheckBox = optionCheckBox;
                 selectCheckBox.replaceChild(checkedImage.cloneNode(true), selectCheckBox.firstChild);
                 selectOption = option;
@@ -84,6 +73,7 @@
                 total++;
                 document.cookie = `selOptI=${selectOption.index}`;
             }
+            postVote();
             for (const element of optionsSection.children) {
                 const optionPercent = element.children[1];
                 const newPercent = (element.count / total * 100) | 0;
@@ -118,16 +108,15 @@
         document.cookie = name + '=;expires=01 Jan 1970 00:00:00 UTC';
     }
 
-    async function getVotes() {
-        return (await fetch(apiUrl)).json();
-    }
-
     async function getIP() {
         const data = (await fetch('https://www.cloudflare.com/cdn-cgi/trace')).text();
     }
 
-    async function getUpdate() {
-        let votes = await (await fetch(apiUrl + '?t=1')).text();
+    function updateVotes(votes) {
+        // // request time
+        // console.log((Date.now() - this.startTime));
+        console.log(votes)
+        votes = votes.v;
         if (lastUpdateVotes === votes) return;
         lastUpdateVotes = votes;
         votes = votes.split(',').map(i => parseInt(i));
@@ -152,13 +141,30 @@
         totalVoteCount.textContent = total + votedText;
     }
 
-    async function postVote(body) {
-        const requestOptions = {
-            method: 'POST',
-            headers: postHeader,
-            body: JSON.stringify(body),
-            redirect: 'follow',
-        };
-        return (await fetch(apiUrl, requestOptions)).text();
+    let lastUploadTime = 0;
+    let timeoutUploadTask = 0;
+
+    function postVote() {
+        if (!timeoutUploadTask && Date.now() - lastUploadTime > updateInterval) {
+            lastUploadTime = Date.now();
+            postVoteData();
+        } else if (!timeoutUploadTask) {
+            timeoutUploadTask = setTimeout(function () {
+                postVoteData();
+                timeoutUploadTask = 0;
+            }, updateInterval - (Date.now() - lastUploadTime));
+        }
+    }
+
+    function postVoteData() {
+        if (lastUpdateSelectIndex === -1) {
+            if (selectOption)
+                postData({sel: selectOption.index});
+        } else if (!selectOption) {
+            if (lastUpdateSelectIndex !== -1)
+                postData({deSel: lastUpdateSelectIndex});
+        } else if (selectOption.index !== lastUpdateSelectIndex)
+            postData({sel: selectOption.index, deSel: lastUpdateSelectIndex});
+        lastUpdateSelectIndex = selectOption ? selectOption.index : -1;
     }
 })

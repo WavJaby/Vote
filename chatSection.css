@@ -46,10 +46,18 @@
     box-sizing: border-box;
 }
 
-.chatMessageHistory > .messageHistory > .nameAndMessage > .profileName {
+.chatMessageHistory > .messageHistory > .nameAndMessage > .header > .profileName {
     color: white;
+    display: inline-block;
     font-size: 18px;
     margin: 0;
+}
+
+.chatMessageHistory > .messageHistory > .nameAndMessage > .header > .timestamp {
+    color: gray;
+    font-size: 13px;
+    display: inline-block;
+    margin: 0 0 0 10px;
 }
 
 .chatMessageHistory > .messageHistory > .nameAndMessage > .message {
